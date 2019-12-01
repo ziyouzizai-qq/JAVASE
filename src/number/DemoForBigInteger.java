@@ -3,7 +3,7 @@ package number;
 import java.math.BigInteger;
 
 /**
- * Integer(高精度)
+ * int(高精度)
  * 用于：int类型占四个字节，所以其范围为0x80000000-0x7fffffff，超出则用大整数
  * @author 王浩
  *
