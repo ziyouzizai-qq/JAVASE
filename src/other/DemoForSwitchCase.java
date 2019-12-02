@@ -1,7 +1,7 @@
 package other;
 
 /**
- * JavaSE基础注意点：switch - case
+ * JavaSE基础注意点一：switch - case
  * @author 王浩
  *
  */
