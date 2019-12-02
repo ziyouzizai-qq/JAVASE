@@ -2,6 +2,7 @@ package lambda;
 
 /**
  * lambda表达式
+ * lambda详情参照：https://www.oracle.com/technetwork/cn/articles/java/lambda-1984522-zhs.html
  * 应用场景：1.匿名内部类  2.接口中只有一个抽象方法
  * @author 王浩
  *
