@@ -99,6 +99,7 @@ public class MemberOuter {
 		}
 		
 		private void test() {
+			// 内部类是可以调用外部类的静态方法的，因为静态方法在初始化就已经存在了
 			System.out.println(getConst());
 			// => Outer.class编译后如下
 //			System.out.println(Outer.getConst());
