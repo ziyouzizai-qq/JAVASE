@@ -8,12 +8,14 @@ package innerclass;
  * java中要加载内部类必须在实例化外部类之后完成，而这个时候如果内部类中的变量
  * 是静态的就会在外部类加载时被提前初始化。这与先实例化外部类对象相矛盾
  * 
+ * 因此外部类不可以用静态方法获取成员内部类对象
+ * 
  * 而java常量放在内存中常量池，它的机制与变量是不同的，编译时，
  * 加载常量是不需要加载类的，所以就没有上面那种矛盾。
  * @author 王浩
  *
  */
-public class Outer {
+public class MemberOuter {
 	
 	private int time;
 	
@@ -109,10 +111,10 @@ public class Outer {
 	 * 进行测试
 	 */
 	public static void main(String[] args) {
-		Outer outer = new Outer();
+		MemberOuter outer = new MemberOuter();
 		System.out.println(outer.getTime());
 		// 内部类对象必须依附外部类
-		Outer.Inner inner = outer.new Inner();
+		MemberOuter.Inner inner = outer.new Inner();
 		// => 编译后(这里编译还是很难理解的)
 //		Outer.Inner inner = outer.new Inner((Outer.Inner)null);
 		System.out.println(inner.stackOverflow());
