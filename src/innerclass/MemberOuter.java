@@ -61,7 +61,7 @@ public class MemberOuter {
 	 */
 	private class Inner {
 		// 内部类中变量名如果和外部类成员变量一样,默认this.自身变量
-//		private String time;
+		private int time;
 		
 		/**
 		 * 成员内部类是非静态的。所以在成员内部类中，不能定义静态字段、静态方法和静态内部类，
@@ -76,6 +76,8 @@ public class MemberOuter {
 		public static final String POST = "POST";
 		
 		public void timeInc() {
+			// 内部类time 和外部类一致，可以通过以下方式访问
+			MemberOuter.this.time++;
 			// 内部类可以调用外部类private修饰的变量
 			time++;
 			// => Outer.class编译后如下
