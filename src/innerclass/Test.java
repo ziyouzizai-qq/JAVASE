@@ -9,7 +9,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		// 测试一(成员内部类)
-		MemberOuter outer = new MemberOuter();
+		MemberInnerTest outer = new MemberInnerTest();
 		System.out.println(outer.getTime());
 //		Outer.Inner inner = outer.new Inner();
 //		System.out.println(inner.stackOverflow());

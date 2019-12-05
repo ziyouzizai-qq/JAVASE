@@ -15,7 +15,7 @@ package innerclass;
  * @author 王浩
  *
  */
-public class MemberOuter {
+public class MemberInnerTest {
 	
 	private int time;
 	
@@ -77,7 +77,7 @@ public class MemberOuter {
 		
 		public void timeInc() {
 			// 内部类time 和外部类一致，可以通过以下方式访问
-			MemberOuter.this.time++;
+			MemberInnerTest.this.time++;
 			// 内部类可以调用外部类private修饰的变量
 			time++;
 			// => Outer.class编译后如下
@@ -114,10 +114,10 @@ public class MemberOuter {
 	 * 进行测试
 	 */
 	public static void main(String[] args) {
-		MemberOuter outer = new MemberOuter();
+		MemberInnerTest outer = new MemberInnerTest();
 		System.out.println(outer.getTime());
 		// 内部类对象必须依附外部类
-		MemberOuter.Inner inner = outer.new Inner();
+		MemberInnerTest.Inner inner = outer.new Inner();
 		// => 编译后(这里编译还是很难理解的)
 //		Outer.Inner inner = outer.new Inner((Outer.Inner)null);
 		System.out.println(inner.stackOverflow());
