@@ -55,6 +55,16 @@ public class Test {
 		arr[3] = 'S';
 		System.out.println(son02.getName());
 		System.out.println(son01.getName() == son02.getName());
+		
+		System.out.println("=========");
+		Son son03 = new Son();
+		son03.setDna("abc");
+		Son son04 = son03;
+		son04.setDna("dna");
+		System.out.println(son03.getDna());
+		System.out.println(son03 == son04);
+		System.out.println(son03.getDna() == son04.getDna());
+		System.out.println(son03.getDna().equals(son04.getDna()));
 	}
 	
 }
