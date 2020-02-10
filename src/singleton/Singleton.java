@@ -27,9 +27,9 @@ public class Singleton {
 	// 双重检测模型的基础上添加一个volatile修饰属性
 	// 目的是为了保证属性的创建及赋值过程不会产生指令重排序
 	// 发送一行代码  new Sington(); ---> 指令
-	// 1.先开辟内存空间-对象
-	// 2.对象空间初始化(往对象空间里面摆放信息)
-	// 3.将对象空间的地址赋予变量存储
+	//	memory =allocate();    1：分配对象的内存空间 
+	//	ctorInstance(memory);  2：初始化对象
+	//	instance =memory;      3：instance指向刚分配的内存地址，此时对象还未初始化
 	private static volatile Singleton obj2; // 没有创建对象
 	
 	public static Singleton getSingleton2() {
