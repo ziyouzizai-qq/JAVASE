@@ -37,9 +37,7 @@ public class Singleton {
 			synchronized (Singleton.class) {
 				if (obj2 == null) {
 					obj2 = new Singleton();
-					
 				}
-				
 			}
 		}
 		return obj1;
