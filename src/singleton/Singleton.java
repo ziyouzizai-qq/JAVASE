@@ -1,6 +1,7 @@
 package singleton;
 
 /**
+ * 设计模式之单例模式
  * 通过一系列设计
  * 让当前这个Singleton类
  * 只能创建唯一的对象
