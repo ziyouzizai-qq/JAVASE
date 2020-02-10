@@ -32,6 +32,12 @@ public class Singleton {
 	//	instance =memory;      3：instance指向刚分配的内存地址，此时对象还未初始化
 	private static volatile Singleton obj2; // 没有创建对象
 	
+	//	memory =allocate();    1：分配对象的内存空间 
+	//	instance =memory;      3：instance指向刚分配的内存地址，此时对象还未初始化
+	//	ctorInstance(memory);  2：初始化对象
+	//	ThreadA调用 getInstance()方法执行完了1和3两条指令，此时对象未初始化但是mIntance已经指向了一块内存区域；
+	//	ThreadB此时进入getIntance()方法，判定mIntance引用不为空，直接返回。
+	//	ThreadB就会使用到未初始化的实例对象，产生不可预期的错误.即这是一个残缺的对象。
 	public static Singleton getSingleton2() {
 		if (obj2 == null) {
 			synchronized (Singleton.class) {
