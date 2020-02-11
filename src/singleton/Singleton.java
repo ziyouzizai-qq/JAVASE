@@ -47,7 +47,7 @@ public class Singleton {
 				}
 			}
 		}
-		return obj1;
+		return obj2;
 	}
 	// 这种写法解决了内存浪费问题
 	// 但是存在线程问题
