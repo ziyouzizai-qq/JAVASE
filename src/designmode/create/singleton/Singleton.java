@@ -30,7 +30,7 @@ public class Singleton {
 	// 发送一行代码  new Sington(); ---> 指令
 	//	memory =allocate();    1：分配对象的内存空间 
 	//	ctorInstance(memory);  2：初始化对象
-	//	instance =memory;      3：instance指向刚分配的内存地址，此时对象还未初始化
+	//	instance =memory;      3：instance指向刚分配的内存地址
 	private static volatile Singleton obj2 = null; // 没有创建对象
 	
 	//	memory =allocate();    1：分配对象的内存空间 
