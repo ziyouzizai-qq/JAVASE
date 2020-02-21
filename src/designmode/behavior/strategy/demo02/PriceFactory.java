@@ -26,18 +26,25 @@ public class PriceFactory {
 	/**
 	 * 获取包路径下所有的策略实现类
 	 */
+	@SuppressWarnings("unchecked")
 	public void getClassNames() {
 		try {
 			String packageName = "designmode.behavior.strategy.demo02";
 			Set<String> classNames = ClassUtils.getClassName(packageName, false);
 			for (String single : classNames) {
 				// 这边要筛选出Price的实现类对象
-				Class classObj = Class.forName(single).getClassLoader().loadClass(single);
-//				if (classObj.) {
-//					
-//				}
-				// TODO 按理说只放Price的实现类
-				priceList.add(classObj);
+				Class<?> classObj = Class.forName(single).getClassLoader().loadClass(single);
+				if (Price.class.isAssignableFrom(classObj) // 判断是否是Price的子类
+						&& !classObj.isInterface() // 判断是否是接口或者注解
+						&& !(classObj.getModifiers() == 1025)) { // 判断是否是抽象类
+					// 按理说只放Price的实现类
+					priceList.add((Class<? extends Price>) classObj);
+				}
+			}
+
+			// 遍历集合看看放了哪些元素
+			for (Class<? extends Price> clazz : priceList) {
+				System.out.println(clazz);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,7 +74,10 @@ public class PriceFactory {
 			// 获取注解信息
 			PriceRegion priceRegion = clazz.getAnnotation(PriceRegion.class);
 			// 来判断是哪一个用户级别
-			if (priceRegion != null) {
+			if (priceRegion != null // 防止空指针，按照设计来讲这边不应该私自处理这样的错误，应抛出给程序员提示没有遵循规范
+					&& Price.class.isAssignableFrom(clazz) // 判断是否是Price的子类
+					&& !clazz.isInterface() // 判断是否是接口或者注解
+					&& !(clazz.getModifiers() == 1025)) { // 判断是否是抽象类
 				if (price.compareTo(new BigDecimal(priceRegion.max())) < 0
 						&& price.compareTo(new BigDecimal(priceRegion.min())) > 0) {
 					// 返回对应的用户实例
