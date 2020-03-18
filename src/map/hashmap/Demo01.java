@@ -118,10 +118,15 @@ public class Demo01 {
 	                		 有可能是小数
 	                         (int)ft : MAXIMUM_CAPACITY);
 	                if (t > threshold)
-	                	5.计算数组的容量
+	                	5.计算数组的容量（这个时候threshold还是table.length）
+	                	调用for循环里面的putVal，只有第一次的时候
+	                	(tab = table) == null 为true,进行resize后threshold = 0.75*table.length
 	                    threshold = tableSizeFor(t);
 	            }
 	            else if (s > threshold)
+	            	该情况说明什么进来：putAll方法是不是也要进来
+	            	说明该map已经创建完毕并且扩容了吧，threshold = 0.75*table.length
+	            	被存放的数组元素超过了是不是必须要扩容
 	            	扩容
 	                resize();
 	            6.遍历键值对
@@ -217,7 +222,7 @@ public class Demo01 {
 	        }
 	        修改次数+1
 	        ++modCount;
-	        由于并不是你每一个都是覆盖操作，有可能是新元素put，所以size先加一然后判断
+	        能到这基本都是非覆盖操作，新元素put，所以size先加一然后判断
 	        是否超过0.75的容量
 	        if (++size > threshold)
 	        	超过则扩容
@@ -230,6 +235,17 @@ public class Demo01 {
 		 */
 		// "k1".hashCode() = 3366
 		map1.put("k1", "v1");
+		
+		
+		// TODO:resize()分析
+		
+//		if (1>0) {
+//			System.out.println(1);
+//		} else if (2>0) {
+//			System.out.println(2);
+//		} else {
+//			System.out.println(3);
+//		}
 	}
 
 }
