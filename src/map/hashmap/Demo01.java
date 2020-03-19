@@ -87,7 +87,6 @@ public class Demo01 {
 		 */
 		HashMap<String, String> map2 = new HashMap<String, String>(10);
 		
-		
 		/**
 		 * Map<? extends K, ? extends V> m 将map放入另一个map
 		 * 1. this.loadFactor = DEFAULT_LOAD_FACTOR;
@@ -165,10 +164,9 @@ public class Demo01 {
 	        目前来看，源码还没涉及到设计层面，仅仅是用的java语法+算法+逻辑来处理
 	        这部分源码我看下来，作者很喜欢在判断里面就把值赋了，源码看的时候一定
 	        要细节，就拿下面这个判断为例，如果table为null，(n = tab.length) == 0不需要判断和赋值
-	        直接走进if中扩容取length赋值给n，下面的if判断要用到。那如果table不等于null，判断
-	        (n = tab.length) == 0，还防止了空指针。就算length不是0，这部分操作也不浪费，同样是
-	        给n赋值给下面的if判断。整个代码看上去一团糟，其实学问很大，把代码的执行顺序和判断短路
-	        运用的淋漓尽致。
+	        直接走进if中扩容取length赋值给n，计算索引要用到。那如果table不等于null，判断
+	        (n = tab.length) == 0，即防止了空指针，也计算出n的值判断。就算length不是0，这部分操作也不浪费，同样是
+	        给n赋值下面计算索引。整个代码看上去一团糟，其实技巧很多，把代码的执行顺序和判断短路运用的淋漓尽致。
 	        ======
 	        if ((tab = table) == null || (n = tab.length) == 0)
 	        	说明需要扩容，有值进来，table是null或者是空是不合理的
@@ -237,15 +235,122 @@ public class Demo01 {
 		map1.put("k1", "v1");
 		
 		
-		// TODO:resize()分析
 		
-//		if (1>0) {
-//			System.out.println(1);
-//		} else if (2>0) {
-//			System.out.println(2);
-//		} else {
-//			System.out.println(3);
-//		}
+		/**
+		 * 之前的方法反复提到resize()方法，下面进行源码分析
+		 * 
+		 * resize是和构造函数相关的，总共三个
+		 * 1. HashMap<String, String> map1 = new HashMap<String, String>();
+		 * 2. HashMap<String, String> map2 = new HashMap<String, String>(10);
+		 * 3. HashMap<String, String> map3 = new HashMap<String, String>(map1);
+		 * 
+		 * 
+		final Node<K,V>[] resize() {
+			先获取数组
+	        Node<K,V>[] oldTab = table;
+	        oldCap：记录旧的table长度，如果是第一次扩容，此时table=null，为0，第一次以外直接oldTab.length
+	        int oldCap = (oldTab == null) ? 0 : oldTab.length;
+	        oldThr：记录旧的可放node的数量，resize()方法一般是在put值的时候调用吧，new HashMap()不调用吧，第一次
+	        out值操作，threshold是不是计算了，不管是new HashMap()还是new HashMap(map1)，都有threshold = tableSizeFor(t)，
+	        是不是记录了需要扩容的table长度，这个值还不是0.75倍。
+	        int oldThr = threshold;
+	        int newCap, newThr = 0;
+	        if (oldCap > 0) {
+	        	能进该条件说明不是第一次扩容了吧，你table都不是null了，怎么可能还是第一次
+	            if (oldCap >= MAXIMUM_CAPACITY) {
+	            	如果旧长度已经是2的30次方了，只能返回原数组吧，抱歉，已经是最大了，不能扩了
+	            	你用map基本上不会那么大，基本走不进来
+	                threshold = Integer.MAX_VALUE; threshold为int最大值
+	                return oldTab;
+	            }
+	            newCap = oldCap << 1 按位左移扩容两倍
+	            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+	                     oldCap >= DEFAULT_INITIAL_CAPACITY)
+	                newThr = oldThr << 1; // double threshold
+	                假设oldCap=16，oldThr=12
+	                扩容后oldCap=32，oldThr=24
+	                0000 0000 0000 1100
+	                0000 0000 0001 1000
+	                这边为什么不直接乘2，二进制运算效率高啊，其实oldCap >= DEFAULT_INITIAL_CAPACITY这个条件
+	                可以去掉，只不过4,8这些数小，没必要在这左移
+	        }
+	        else if (oldThr > 0) // initial capacity was placed in threshold
+	        	进这个条件啥意思：table为null，第一次扩容，但是threshold是有值的,是不是专门处理第二个构造函数，
+	        	该构造函数没有扩容，仅仅是算table的长度
+	        	为什么不是newThr = oldThr？因为此时的oldThr是数组长度，强调此时还不是0.75倍的table长度
+	            newCap = oldThr;
+	        else {               // zero initial threshold signifies using defaults
+	        	进这个条件啥意思：oldCap = 0并且oldThr <= 0,table为null，第一次扩容且threshold为默认值0，那肯定不可能是负数了
+	        	很明显从代码和else右边注释看得出来，这是第一个构造函数专用的吧
+	        	newCap = 16
+	        	newThr = 0.75*16 = 12
+	        	这就是很多人所知道默认容量是16，存储容量是12的源代码
+	            newCap = DEFAULT_INITIAL_CAPACITY;
+	            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+	        }
+	        if (newThr == 0) {
+	        	判断newThr是否赋值，只有else if (oldThr > 0)和if (oldCap > 0)中oldCap < DEFAULT_INITIAL_CAPACITY未赋值
+	        	else if (oldThr > 0)属于第二个构造函数，newThr = newCap*0.75
+	        	oldCap < DEFAULT_INITIAL_CAPACITY；4,8的容量在这处理吧
+	            float ft = (float)newCap * loadFactor;
+	            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+	                      (int)ft : Integer.MAX_VALUE);
+	        }
+	        
+	        这里是不是统一变成threshold = newCap * 0.75
+	        threshold = newThr;
+	        
+	        以上部分主要是算table长度和threshold的
+	        
+	        @SuppressWarnings({"rawtypes","unchecked"})
+	            Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+	        table = newTab;
+	        if (oldTab != null) {
+	            for (int j = 0; j < oldCap; ++j) {
+	                Node<K,V> e;
+	                if ((e = oldTab[j]) != null) {
+	                    oldTab[j] = null;
+	                    if (e.next == null)
+	                        newTab[e.hash & (newCap - 1)] = e;
+	                    else if (e instanceof TreeNode)
+	                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+	                    else { // preserve order
+	                        Node<K,V> loHead = null, loTail = null;
+	                        Node<K,V> hiHead = null, hiTail = null;
+	                        Node<K,V> next;
+	                        do {
+	                            next = e.next;
+	                            if ((e.hash & oldCap) == 0) {
+	                                if (loTail == null)
+	                                    loHead = e;
+	                                else
+	                                    loTail.next = e;
+	                                loTail = e;
+	                            }
+	                            else {
+	                                if (hiTail == null)
+	                                    hiHead = e;
+	                                else
+	                                    hiTail.next = e;
+	                                hiTail = e;
+	                            }
+	                        } while ((e = next) != null);
+	                        if (loTail != null) {
+	                            loTail.next = null;
+	                            newTab[j] = loHead;
+	                        }
+	                        if (hiTail != null) {
+	                            hiTail.next = null;
+	                            newTab[j + oldCap] = hiHead;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	        return newTab;
+	    }
+		 */
+		
 	}
 
 }
