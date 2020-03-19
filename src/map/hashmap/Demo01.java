@@ -246,7 +246,7 @@ public class Demo01 {
 		 * 
 		 * 
 		final Node<K,V>[] resize() {
-			先获取数组
+			保存旧的数组
 	        Node<K,V>[] oldTab = table;
 	        oldCap：记录旧的table长度，如果是第一次扩容，此时table=null，为0，第一次以外直接oldTab.length
 	        int oldCap = (oldTab == null) ? 0 : oldTab.length;
@@ -303,24 +303,46 @@ public class Demo01 {
 	        以上部分主要是算table长度和threshold的
 	        
 	        @SuppressWarnings({"rawtypes","unchecked"})
+	        	创建一个Node数组，指定数组长度为newCap
 	            Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+	        给table创建的，数组+链表+红黑树，table是其一，即数组
 	        table = newTab;
+	        如果旧的数组是null，第一次扩容，直接返回扩容后的空数组
 	        if (oldTab != null) {
+	        	下面的操作肯定是遍历旧数组，把元素取到新数组中吧
 	            for (int j = 0; j < oldCap; ++j) {
 	                Node<K,V> e;
+	                依次判断旧数组中的元素是否为null，不是就保存到e
 	                if ((e = oldTab[j]) != null) {
+	                	该位置有值，废除旧数组引用该对象
 	                    oldTab[j] = null;
 	                    if (e.next == null)
+	                    	说明不是链表，只有一个元素
+	                    	重新计算hash值并且将元素放进新数组索引位置
+	                    	由于扩容了两倍，重新计算hash值索引可能是旧数组的索引，也有可能是旧数组索引加旧数组长度
+	                    	为什么呢？
+	                    	假设16的长度被扩容到32
+	                    	0000 0000 0000 0000 0000 0000 0000 1111				0000 0000 0000 0000 0000 0000 0001 1111
+	                 hash值 0000 0000 0000 0000 0000 0000 0001 1010				0000 0000 0000 0000 0000 0000 0001 1010
+	                 		-------------------------------------------------------------------------------------------
+	                 		0000 0000 0000 0000 0000 0000 0000 1010				0000 0000 0000 0000 0000 0000 0001 1010
+	                 索引值					10														26=》10+16
+	                 		总结：两种情况是要看newCap - 1最高位1与hash值对位的是0还是1。由hash值那一个位置来决定。
 	                        newTab[e.hash & (newCap - 1)] = e;
 	                    else if (e instanceof TreeNode)
+	                    	判断是否是树节点
 	                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
 	                    else { // preserve order
+	                    	不是红黑树并且有子节点，链表结构
 	                        Node<K,V> loHead = null, loTail = null;
 	                        Node<K,V> hiHead = null, hiTail = null;
 	                        Node<K,V> next;
 	                        do {
+	                        	保存下一个节点
 	                            next = e.next;
+	                            oldCap是2的n次方按位与不是0就是oldCap，主要看e.hash和oldCap对应1位的是0还是1
 	                            if ((e.hash & oldCap) == 0) {
+	                            	与其对位的是0 TODO:
 	                                if (loTail == null)
 	                                    loHead = e;
 	                                else
