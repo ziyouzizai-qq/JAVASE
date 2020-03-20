@@ -191,7 +191,7 @@ public class Demo01 {
 	                for (int binCount = 0; ; ++binCount) {
 	                    if ((e = p.next) == null) {
 	                        p.next = newNode(hash, key, value, null);
-	                        大于等于7就需要转红黑树，为什么是7，头节点算一个
+	                        大于等于7就需要转红黑树，0-7，链表只能存8个，再多就降低查询效率了
 	                        if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
 	                            treeifyBin(tab, hash);
 	                        break;
@@ -334,35 +334,52 @@ public class Demo01 {
 	                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
 	                    else { // preserve order
 	                    	不是红黑树并且有子节点，链表结构
+	                    	loHead：旧索引值的头节点
 	                        Node<K,V> loHead = null, loTail = null;
+	                        hiHead：旧索引值+旧数组长度的头节点
 	                        Node<K,V> hiHead = null, hiTail = null;
 	                        Node<K,V> next;
 	                        do {
 	                            保存下一个节点
 	                            next = e.next;
 	                            oldCap是2的n次方按位与不是0就是oldCap，主要看e.hash和oldCap对应1位的是0还是1
+	                            这个判断的作用我在resize.md文档里讲解，算法非常厉害
 	                            if ((e.hash & oldCap) == 0) {
-	                            	与其对位的是0 TODO:
+	                            	旧索引值
 	                                if (loTail == null)
+	                                	说明终于有一个旧索引值位置的node吧，其作为头节点
 	                                    loHead = e;
 	                                else
+	                                	如果已经有了头节点，为loTail的子节点，看下面这行代码
 	                                    loTail.next = e;
+	                                记录进入条件的上一个节点，方便拼接下一个节点
 	                                loTail = e;
 	                            }
 	                            else {
+	                            	旧索引值+旧数组长度
 	                                if (hiTail == null)
+	                                	说明终于有一个旧索引值+旧数组长度位置的node吧，其作为头节点
 	                                    hiHead = e;
 	                                else
+	                                	与上面同理
 	                                    hiTail.next = e;
 	                                hiTail = e;
 	                            }
+	                            没有子节点退出循环
 	                        } while ((e = next) != null);
+	                        其实上面的do循环next不断迭代，顺序自然而然在两个位置排好了
 	                        if (loTail != null) {
+	                        	不为null说明旧索引值有节点吧如果是(0,7)的情况是不是这里就进不来了
+	                        	loTail即可以作为旧索引值有没有值外，也记录了最后一个元素，最后一个元素
+	                        	的子元素确保是null
 	                            loTail.next = null;
+	                            抓住链头放入旧索引值中
 	                            newTab[j] = loHead;
 	                        }
 	                        if (hiTail != null) {
+	                        	上面同理
 	                            hiTail.next = null;
+	                            看，是不是放入到旧索引值+旧数组长度
 	                            newTab[j + oldCap] = hiHead;
 	                        }
 	                    }
@@ -371,8 +388,20 @@ public class Demo01 {
 	        }
 	        return newTab;
 	    }
+	    写出这种代码的人真的非常厉害，算法，逻辑，语法，将其运用巧妙，顶级大牛。所以说多看看源码，
+	    不要求一看就会，就能写那种，能看得懂就是无形中的提高。
+	    map取值我就不分析了，不要看，那代码肯定很简单，老实说我现在没有看过get的源码，我来猜它会做什么？
+	    1.根据你提供的key，计算出你的hash值，然后e.hash & (newCap - 1)计算出索引值
+	    2.获取该位置元素，如果是null，说明没有值，返回null
+	    3.如果不是null，作者肯定还是在上面的判断把头节点取下来，看是不是树节点，是，红黑树操作，不是，
+	    迭代节点，比较hash值是否一样，一样的话看key值是否是同一个引用或者是equals相同，true的话就将
+	    该节点的value取出来返回，迭代结束。false的话就说明没有节点符合，返回null。
+	    
+	    当然前提是table存在并且长度不能为0，这句话是我看源码补的。
+	    
+	    红黑树操作源码包括如何转红黑树我稍后分析
 		 */
-		
+		map1.get("k1");
 	}
 
 }
