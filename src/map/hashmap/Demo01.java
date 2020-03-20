@@ -27,7 +27,7 @@ public class Demo01 {
 		/**
 		 * 指定容量map
 		 * 通过无符号右移，并且按位或的算法大于等于cap的最小的二次幂数值
-		
+
 		public HashMap(int initialCapacity, float loadFactor) {
 			对你传过来的容量进行check
 	        if (initialCapacity < 0)
@@ -45,7 +45,7 @@ public class Demo01 {
 	        DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY，会变成总容量的0.75，要注意
 	        this.threshold = tableSizeFor(initialCapacity);
 	    }
-	    
+
 	    static final int tableSizeFor(int cap) {
 	        int n = cap - 1;
 	        n |= n >>> 1;
@@ -58,7 +58,7 @@ public class Demo01 {
 	    假设cap传过来是10
 	    		十进制									二进制
 	    cap		  10						0000 0000 0000 0000 0000 0000 0000 1010
-	    
+
 	    n		   9						0000 0000 0000 0000 0000 0000 0000 1001
 	    n >>> 1    							0000 0000 0000 0000 0000 0000 0000 0100		按位或运算
 	    -----------------------------------------------------------------------------------------
@@ -66,12 +66,12 @@ public class Demo01 {
 	    n >>> 2    							0000 0000 0000 0000 0000 0000 0000 0011
 	    -----------------------------------------------------------------------------------------
 	    n         15						0000 0000 0000 0000 0000 0000 0000 1111
-	    
+
 	    。。。
 	    之后不管移多少位还是一样的
 	    通过移位算法或运算可以发现n第一个1的高位的后面多少位都会变成1的。然后在判断n+1，等于1 0000，
 	    10最靠近的2的幂次方不就是16嘛
-	    
+
 	    但是为什么一上来先cap-1呢？
 	    如果传过来是2的幂次方，比方说是16的话，意思是需要16的容量数组，是符合2的幂次方规则的，所以应当
 	    返回16。
@@ -86,7 +86,7 @@ public class Demo01 {
 	    return操作三目套三目，主要是看n+1操作，其成立条件是0<=n<MAXIMUM_CAPACITY  
 		 */
 		HashMap<String, String> map2 = new HashMap<String, String>(10);
-		
+
 		/**
 		 * Map<? extends K, ? extends V> m 将map放入另一个map
 		 * 1. this.loadFactor = DEFAULT_LOAD_FACTOR;
@@ -139,8 +139,8 @@ public class Demo01 {
 	    }  
 		 */
 		HashMap<String, String> map3 = new HashMap<String, String>(map1);		
-		
-		
+
+
 		/**
 		 * 放值源码解析：putVal(hash(key), key, value, false, evict);
 		 * 上面遍历键值对也有这个操作
@@ -151,11 +151,11 @@ public class Demo01 {
 	        hashmap是可以以null为key的，求出的hash值永远为0，所以(n - 1) & hash 永远是同一个位置
 	        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
 	    }
-	    
+
 	    (h = key.hashCode()) ^ (h >>> 16)
 	    hashcode高16位和低16位异或求hash值，不容易出现hash碰撞
-	    
-		
+
+
 		final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 	                   boolean evict) {
 	        Node<K,V>[] tab; Node<K,V> p; int n, i;
@@ -233,9 +233,9 @@ public class Demo01 {
 		 */
 		// "k1".hashCode() = 3366
 		map1.put("k1", "v1");
-		
-		
-		
+
+
+
 		/**
 		 * 之前的方法反复提到resize()方法，下面进行源码分析
 		 * 
@@ -296,12 +296,12 @@ public class Demo01 {
 	            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
 	                      (int)ft : Integer.MAX_VALUE);
 	        }
-	        
+
 	        这里是不是统一变成threshold = newCap * 0.75
 	        threshold = newThr;
-	        
+
 	        以上部分主要是算table长度和threshold的
-	        
+
 	        @SuppressWarnings({"rawtypes","unchecked"})
 	        	创建一个Node数组，指定数组长度为newCap
 	            Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
@@ -396,9 +396,9 @@ public class Demo01 {
 	    3.如果不是null，作者肯定还是在上面的判断把头节点取下来，看是不是树节点，是，红黑树操作，不是，
 	    迭代节点，比较hash值是否一样，一样的话看key值是否是同一个引用或者是equals相同，true的话就将
 	    该节点的value取出来返回，迭代结束。false的话就说明没有节点符合，返回null。
-	    
+
 	    当然前提是table存在并且长度不能为0，这句话是我看源码补的。
-	    
+
 	    红黑树操作源码包括如何转红黑树我稍后分析
 		 */
 		map1.get("k1");
