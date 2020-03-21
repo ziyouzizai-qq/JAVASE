@@ -189,6 +189,9 @@ public class Demo01 {
 	            else {
 	            	链表结构
 	                for (int binCount = 0; ; ++binCount) {
+	                	将下一个节点赋给e，不为null，下面的if判断是不是要覆盖，不是，迭代下一个
+	                	如果下一个节点为null，说明该索引位置链表已经遍历结束，你要put的值不是更新操作，
+	                	是新建操作，在最后一个元素生成一个节点，并判断是否转换红黑树。
 	                    if ((e = p.next) == null) {
 	                        p.next = newNode(hash, key, value, null);
 	                        大于等于7就需要转红黑树，0-7，链表只能存8个，再多就降低查询效率了
@@ -227,7 +230,7 @@ public class Demo01 {
 	            resize();
 	        方法无操作
 	        afterNodeInsertion(evict);
-	        由于你是添的新元素，无旧值返回
+	        新建的node是没有旧值返回的
 	        return null;
 	    }
 		 */
