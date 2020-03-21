@@ -27,7 +27,7 @@ package map.hashmap;
  *
  */
 public class Demo02 {
-	
+
 	/**
 	 * 走进整个方法的前提是链表节点数超过8个
 		final void treeifyBin(Node<K,V>[] tab, int hash) {
@@ -70,9 +70,9 @@ public class Demo02 {
 	                hd.treeify(tab);
 	        }
 	    }
-	 	
-	 	
-	 	
+
+
+
 	 	final void treeify(Node<K,V>[] tab) {
             TreeNode<K,V> root = null;
             for (TreeNode<K,V> x = this, next; x != null; x = next) {
@@ -114,7 +114,7 @@ public class Demo02 {
             }
             moveRootToFront(tab, root);
         }
-	 	
+
 	 */
 
 }
