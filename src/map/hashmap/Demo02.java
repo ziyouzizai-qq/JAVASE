@@ -24,6 +24,13 @@ package map.hashmap;
  * 官方这么折腾，就是为了提高性能。
  * 下面分析源码：
  * @author 王浩
+ * 
+ * 红黑树是一种含有红黑节点并能自平衡的二叉查找树，它必须满足5个条件：
+ * 1.每个节点非红即黑
+ * 2.根节点是黑色
+ * 3.每个叶子节点（虚节点）是黑色
+ * 4.每个红色节点的两个子节点一定是黑色
+ * 5.任意一节点到每个叶子节点的路径都包含数量相同的黑节点。
  *
  */
 public class Demo02 {
@@ -62,6 +69,7 @@ public class Demo02 {
 	                记录上一个循环的节点，供下一次循环节点之间互相关联
 	                tl = p;
 	            } while ((e = e.next) != null);
+	            	将新链表再放到原来位置
 	            if ((tab[index] = hd) != null)
 	            	如果hd有值的话，其实到这里肯定是有值的，至此，还没转红黑树，感觉只是包了
 	            	个TreeNode类型，还是个链表，只不过和普通链表区别就是，普通链表是父节点只会记录子
@@ -72,28 +80,45 @@ public class Demo02 {
 	    }
 
 
-
+		这个方法是TreeNode中的方法
 	 	final void treeify(Node<K,V>[] tab) {
+	 		根节点
             TreeNode<K,V> root = null;
+            遍历链表，这时是TreeNode链表,是双向的
+            这个for循环就是在迭代节点，x != null，第一次看到不可能是null，不然this为null，treeify方法
+            空指针，这个判断主要作用是是否存在子节点，next不断取子节点，又赋给x了
             for (TreeNode<K,V> x = this, next; x != null; x = next) {
+            	取子节点
                 next = (TreeNode<K,V>)x.next;
+                确保树节点左右两个节点为null
                 x.left = x.right = null;
                 if (root == null) {
+                	主要是第一次进来，设置根节点，根节点肯定是无父节点的
+                	确保父节点为null
                     x.parent = null;
+                    TreeNode里面有个red，而且还是布尔类型的，根节点必须是黑色
                     x.red = false;
+                    this，头节点为根节点
                     root = x;
                 }
                 else {
+                	根节点存在的情况
                     K k = x.key;
+                    保存当前节点的hash值
                     int h = x.hash;
                     Class<?> kc = null;
                     for (TreeNode<K,V> p = root;;) {
+                    	dir：左右方向标志位
                         int dir, ph;
                         K pk = p.key;
+                        当前树节点的hash如果大于当前迭代节点的hash
                         if ((ph = p.hash) > h)
-                            dir = -1;
+                            dir = -1; 放左侧
                         else if (ph < h)
-                            dir = 1;
+                     	根节点的hash如果小于当前迭代节点的hash
+                            dir = 1; 放右侧
+                        上面一操作就是利用hash大小决定在父节点上的左右位置
+                        倘若hash值相同，走下一步，hash值相同，而且还是链表，说明两个key引用地址不同并且equals为false
                         else if ((kc == null &&
                                   (kc = comparableClassFor(k)) == null) ||
                                  (dir = compareComparables(kc, k, pk)) == 0)
@@ -117,4 +142,9 @@ public class Demo02 {
 
 	 */
 
+	/**
+	 * 红黑树这边其实还是需要对数据结构，像二叉树，平衡，左旋右旋要了解的。
+	 * 为了源码研究的更加透彻，我要对数稍加研究，我会在建一个tree的包，来补充
+	 * 这方面的知识。
+	 */
 }
