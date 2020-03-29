@@ -1,6 +1,7 @@
 package map.hashmap;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JDK1.8之后的HashMap源码分析 数组+链表+红黑树
@@ -22,7 +23,8 @@ public class Demo01 {
 		 * 小了会增大时间开销（频繁扩容，容易产生链表），大了会也增大时间开销（影响遍历）。
 		 */
 		HashMap<String, String> map1 = new HashMap<String, String>();
-
+		ConcurrentHashMap<String, String> map11 = new ConcurrentHashMap<String, String>();
+		map11.put("", "");
 		// =====有参构造 ======
 		/**
 		 * 指定容量map
