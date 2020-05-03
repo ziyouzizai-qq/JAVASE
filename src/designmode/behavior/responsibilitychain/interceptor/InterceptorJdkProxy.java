@@ -52,13 +52,13 @@ public class InterceptorJdkProxy implements InvocationHandler {
 		// 通过反射生成拦截器
 		Interceptor interceptor = (Interceptor) Class.forName(interceptorClass).newInstance();
 		// 调用前置方法
-		if (interceptor.before(proxy, args, method, args)) {
+		if (interceptor.before(proxy, target, method, args)) {
 			result = method.invoke(target, args);
 		} else { // 返回false执行around方法
-			interceptor.around(proxy, args, method, args);
+			interceptor.around(proxy, target, method, args);
 		}
 		// 调用后置方法
-		interceptor.after(proxy, args, method, args);
+		interceptor.after(proxy, target, method, args);
 		return result;
 	}
 
