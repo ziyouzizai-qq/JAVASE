@@ -14,6 +14,10 @@ public class Test {
         Train t = (Train) proxy.getProxy(Train.class);
         // 代理对象调用
         t.move();
+        
+        System.out.println("=========");
+        Train t1 = (Train) proxy.getProxy(Train.class);
+        System.out.println(t == t1);
 	}
 
 }

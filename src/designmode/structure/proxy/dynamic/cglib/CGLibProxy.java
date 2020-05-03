@@ -23,6 +23,7 @@ public class CGLibProxy implements MethodInterceptor {
 		Enhancer enhancer = new Enhancer();
 		// 设置增强类型
 		enhancer.setSuperclass(clazz);
+		enhancer.setUseCache(false);
 		// 定义代理逻辑对象为当前对象，要求当前对象实现MethodInterceptor方法
 		enhancer.setCallback(this);
 		// 生成并返回代理对象
