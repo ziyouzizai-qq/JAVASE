@@ -45,21 +45,25 @@ public class GroupUnits<T> {
 	 * @return
 	 */
 	public Map<String, List<T>> groupsByFields(T[] arr) {
+		if (Objects.isNull(arr) || arr.length < 1) {
+			throw new IsEmptyExeception("Target Array");
+		}
 		if (includes.isEmpty()) {
 			throw new IsEmptyExeception("Field");
 		}
 		Map<String, List<T>> map = new HashMap<String, List<T>>();
-		for (T dat : arr) {
-			String key = getGroupName(dat);
-			System.out.println(key);
-			List<T> list;
-			if (map.containsKey(key)) {
-				list = map.get(key);
-				list.add(dat);
-			} else {
-				list = new ArrayList<T>();
-				list.add(dat);
-				map.put(key, list);
+		if (Objects.nonNull(arr)) {
+			for (T dat : arr) {
+				String key = getGroupName(dat);
+				List<T> list;
+				if (map.containsKey(key)) {
+					list = map.get(key);
+					list.add(dat);
+				} else {
+					list = new ArrayList<T>();
+					list.add(dat);
+					map.put(key, list);
+				}
 			}
 		}
 		return map;
@@ -191,6 +195,7 @@ public class GroupUnits<T> {
 //		g.setInclude("address");
 		g.setIncludes("money");
 		g.setIncludes("name");
+		System.out.println(g.groupsByFields(null));
 //		g.removeFields("name");
 		System.out.println(g.getGroupByCondition(ps[0],ps));
 		System.out.println(ps[0]);
