@@ -68,7 +68,7 @@ public class GroupUnits<T> {
 	 * @param args
 	 * @return
 	 */
-	public Map<String, List<T>> groupsByField(T[] arr, String ... args) {
+	public Map<String, List<T>> groupsByFields(T[] arr, String ... args) {
 		if (Objects.isNull(arr) || arr.length < 1) {
 			throw new IsEmptyExeception("Target Array");
 		}
@@ -77,7 +77,7 @@ public class GroupUnits<T> {
 		} else {
 			setIncludes(args);
 		}
-		return groupsByField(arr);
+		return groupsByFields(arr);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class GroupUnits<T> {
 	 * @return
 	 */
 	public List<T> getGroupByCondition(T dat, T[] arr) {
-		return getGroupByCondition(dat, groupsByField(arr));
+		return getGroupByCondition(dat, groupsByFields(arr));
 	}
 	
 	/**
