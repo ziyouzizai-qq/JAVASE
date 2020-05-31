@@ -123,26 +123,29 @@ public class GroupUnits<T> {
 	/**
 	 * 移除属性
 	 * @param args
+	 * @return 
 	 * @return
 	 */
-	public void removeIncludes(String ... fields) {
+	public boolean removeIncludes(String ... fields) {
+		boolean modified = false;
 		if (Objects.nonNull(fields)) 
 			for (String field : fields) 
 				if (checkNullOrEmptyField(field))
-					includes.remove(field);
+					modified = includes.remove(field);
+		return modified;
 	}
 	
 	/**
 	 * 选择正常的field名称
 	 * @param args
 	 */
-	public void setIncludes(String ... args) {
+	public boolean setIncludes(String ... args) {
+		boolean modified = false;
 		// 确保args不为null
-		if (Objects.nonNull(args)) {
-			for (String field : args) {
-				setInclude(field);
-			}
-		}
+		if (Objects.nonNull(args)) 
+			for (String field : args) 
+				modified = setInclude(field);
+		return modified;
 	}
 	
 	/**
