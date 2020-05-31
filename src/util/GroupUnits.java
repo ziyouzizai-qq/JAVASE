@@ -16,7 +16,7 @@ import util.ex.IsEmptyExeception;
  * @author 王浩
  * 说明：线程不安全
  * 
- * 遗留问题:1.fastjson必须要重写get方法
+ * 遗留问题:1.fastjson必须要写get方法，还有个就是对null的属性是不参与转json字符串的，不影响分组
  * 		   2.includes有可能存在clazz不存在的属性，但是不影响转json
  * @param <T>
  */
