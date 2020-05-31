@@ -79,9 +79,7 @@ public class GroupUnits<T> {
 		if (Objects.isNull(arr) || arr.length < 1) {
 			throw new IsEmptyExeception("Target Array");
 		}
-		if (Objects.nonNull(args) && args.length > 0) {
-			setIncludes(args);
-		}
+		setIncludes(args);
 		return groupsByFields(arr);
 	}
 	
