@@ -176,31 +176,4 @@ public class GroupUnits<T> {
 		return Objects.nonNull(field) && !"".equals(field);
 	}
 	
-	public static void main(String[] args) throws Exception {
-		Person[] ps = new Person[3];
-		ps[0] = new Person("p1", 11, "add2","100");
-		ps[1] = new Person("p1", 11, null,"200");
-		ps[2] = new Person("p1", 11, "add1","100");
-		GroupUnits<Person> g = new GroupUnits<Person>(Person.class, null);
-//		Map<String, List<Person>> map = g.groupsByFields(ps, "address");
-//		System.out.println(map);
-//		System.out.println(g.getFields());
-//		g.setFields("address");
-//		g.setFields("money");
-//		System.out.println(g.getFields());
-//		
-//		System.out.println(g.getFields());
-		
-		g.setInclude("age");
-//		g.setInclude("address");
-		g.setIncludes("money");
-		g.setIncludes("name");
-//		System.out.println(g.groupsByFields(null));
-//		g.removeFields("name");
-		System.out.println(g.getGroupByCondition(ps[0],ps));
-		System.out.println(ps[0]);
-		System.out.println(ps[2]);
-//		g.setFields("name");
-		System.out.println("simplePropertyPreFilter:"+g.getIncludesInfo());
-	}
 }
