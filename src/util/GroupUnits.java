@@ -115,10 +115,7 @@ public class GroupUnits<T> {
 	public boolean setInclude(String field) {
 		// field为null或者空字符串无意义
 		if (checkNullOrEmptyField(field)) {
-			if (!includes.contains(field)) {
-				includes.add(field);
-				return true;
-			}
+			return includes.add(field);
 		}
 		return false;
 	}
@@ -129,9 +126,9 @@ public class GroupUnits<T> {
 	 * @return
 	 */
 	public void removeIncludes(String ... fields) {
-		for (String field : fields) 
-			if (checkNullOrEmptyField(field))
-				if (includes.contains(field)) 
+		if (Objects.nonNull(fields)) 
+			for (String field : fields) 
+				if (checkNullOrEmptyField(field))
 					includes.remove(field);
 	}
 	
@@ -193,7 +190,7 @@ public class GroupUnits<T> {
 //		g.setInclude("address");
 		g.setIncludes("money");
 		g.setIncludes("name");
-		System.out.println(g.groupsByFields(null));
+//		System.out.println(g.groupsByFields(null));
 //		g.removeFields("name");
 		System.out.println(g.getGroupByCondition(ps[0],ps));
 		System.out.println(ps[0]);
