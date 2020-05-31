@@ -45,6 +45,9 @@ public class GroupUnits<T> {
 	 * @return
 	 */
 	public Map<String, List<T>> groupsByFields(T[] arr) {
+		if (includes.isEmpty()) {
+			throw new IsEmptyExeception("Field");
+		}
 		Map<String, List<T>> map = new HashMap<String, List<T>>();
 		for (T dat : arr) {
 			String key = getGroupName(dat);
@@ -72,9 +75,7 @@ public class GroupUnits<T> {
 		if (Objects.isNull(arr) || arr.length < 1) {
 			throw new IsEmptyExeception("Target Array");
 		}
-		if (includes.isEmpty() && (Objects.isNull(args) || args.length < 1)) {
-			throw new IsEmptyExeception("Field");
-		} else {
+		if (Objects.nonNull(args) && args.length > 0) {
 			setIncludes(args);
 		}
 		return groupsByFields(arr);
