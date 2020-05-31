@@ -131,7 +131,8 @@ public class GroupUnits<T> {
 		if (Objects.nonNull(fields)) 
 			for (String field : fields) 
 				if (checkNullOrEmptyField(field))
-					modified = includes.remove(field);
+					if (includes.remove(field))
+						modified = true;
 		return modified;
 	}
 	
@@ -144,7 +145,8 @@ public class GroupUnits<T> {
 		// 确保args不为null
 		if (Objects.nonNull(args)) 
 			for (String field : args) 
-				modified = setInclude(field);
+				if (setInclude(field)) 
+					modified = true;
 		return modified;
 	}
 	
