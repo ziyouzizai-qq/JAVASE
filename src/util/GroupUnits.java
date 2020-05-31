@@ -54,15 +54,15 @@ public class GroupUnits<T> {
 		Map<String, List<T>> map = new HashMap<String, List<T>>();
 		if (Objects.nonNull(arr)) {
 			for (T dat : arr) {
-				String key = getGroupName(dat);
+				String groupName = getGroupName(dat);
 				List<T> list;
-				if (map.containsKey(key)) {
-					list = map.get(key);
+				if (map.containsKey(groupName)) {
+					list = map.get(groupName);
 					list.add(dat);
 				} else {
 					list = new ArrayList<T>();
 					list.add(dat);
-					map.put(key, list);
+					map.put(groupName, list);
 				}
 			}
 		}
@@ -100,9 +100,9 @@ public class GroupUnits<T> {
 	 * @return
 	 */
 	public List<T> getGroupByCondition(T dat, Map<String, List<T>> map) {
-		String key = getGroupName(dat);
-		if (map.containsKey(key)) {
-			return map.get(key);
+		String groupName = getGroupName(dat);
+		if (map.containsKey(groupName)) {
+			return map.get(groupName);
 		}
 		return null;
 	}
