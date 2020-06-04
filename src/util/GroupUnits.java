@@ -159,6 +159,14 @@ public class GroupUnits<T> {
 	}
 	
 	/**
+	 * 清理field信息
+	 * @return
+	 */
+	public void clearIncludes() {
+		includes.clear();
+	}
+	
+	/**
 	 * 对象转json字符串作为分组名
 	 * @param obj 
 	 * @return
