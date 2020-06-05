@@ -52,18 +52,16 @@ public class GroupUnits<T> {
 			throw new IsEmptyExeception("Field");
 		}
 		Map<String, List<T>> map = new HashMap<String, List<T>>();
-		if (Objects.nonNull(arr)) {
-			for (T dat : arr) {
-				String groupName = getGroupName(dat);
-				List<T> list;
-				if (map.containsKey(groupName)) {
-					list = map.get(groupName);
-					list.add(dat);
-				} else {
-					list = new ArrayList<T>();
-					list.add(dat);
-					map.put(groupName, list);
-				}
+		for (T dat : arr) {
+			String groupName = getGroupName(dat);
+			List<T> list;
+			if (map.containsKey(groupName)) {
+				list = map.get(groupName);
+				list.add(dat);
+			} else {
+				list = new ArrayList<T>();
+				list.add(dat);
+				map.put(groupName, list);
 			}
 		}
 		return map;
